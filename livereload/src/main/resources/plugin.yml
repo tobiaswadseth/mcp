@@ -1,0 +1,7 @@
+name: mcp
+version: 1.0.0
+author: Tobias Wadseth
+main: com.tobiaswadseth.mcp.livereload.Main
+commands:
+  mcp:
+    usage: "/mcp [enable|load|reload|unload|disable] [plugin]"
