@@ -62,11 +62,11 @@
         LGraphCanvas,
         LGraphNode,
       } = require("../node_modules/litegraph.js/build/litegraph");
-      const NodeGenerator = require("../js/nodeGenerator");
-      const CodeGenerator = require("../js/codeGenerator");
-      const History = require("../js/history");
+      const NodeGenerator = require("../src/nodeGenerator");
+      const CodeGenerator = require("../src/javaCodeGenerator");
+      const History = require("../src/history");
       const $ = require("jquery");
-      const { updateLinkColors } = require("../js/util");
+      const { updateLinkColors } = require("../src/utils");
 
       let theMenu = Menu.buildFromTemplate([
         {

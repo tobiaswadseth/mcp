@@ -1,12 +1,12 @@
 const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron");
-const javaCompiler = require("./js/javaCompiler");
-const serverStarter = require("./js/serverStarter");
+const javaCompiler = require("./src/javaCompiler");
+const serverStarter = require("./src/serverStarter");
 const prompt = require("electron-prompt");
 const path = require("path");
 const fs = require("fs-extra");
 const notifier = require("node-notifier");
 const ProgressBar = require("electron-progressbar");
-const { copyFile } = require("./js/util");
+const { copyFile } = require("./src/utils");
 const AdmZip = require("adm-zip");
 
 const DEFAULT_TITLE = "MCP Editor";

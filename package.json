@@ -3,7 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "electron-builder install-app-deps",
+    "start": "electron . --debug",
+    "build": "electron-packager . --out=dist/win --platform=win32 --arch=x64 --asar=true --overwrite",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win",
+    "dist:linux": "electron-builder --linux deb",
+    "dist:all": "electron-builder -wl",
+    "rebuild": "electron-rebuild"
   },
   "repository": {
     "type": "git",
@@ -39,5 +47,35 @@
     "materialize-css": "^1.0.0",
     "node-notifier": "^10.0.1",
     "request": "^2.88.2"
+  },
+  "files": [
+    "**/*",
+    "data",
+    "assets",
+    "*.js",
+    "*.html"
+  ],
+  "build": {
+    "appId": "com.tobiaswadseth.mcp",
+    "productName": "MCP",
+    "copyright": "Copyright © 2022 Tobias Wadseth",
+    "directories": {
+      "output": "dist/out"
+    },
+    "files": [
+      "**/*",
+      "data/*",
+      "assets/images/*",
+      "assets/material-icons/*",
+      "node_modules/litegraph.js/css/*",
+      "node_modules/materialize-css/dist/css/*"
+    ],
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "linux": {
+      "category": "Development"
+    }
   }
 }

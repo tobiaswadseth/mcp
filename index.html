@@ -1,0 +1,158 @@
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="node_modules/materialize-css/dist/css/materialize.min.css"
+    />
+    <link rel="stylesheet" href="assets/material-icons/material-icons.css" />
+
+    <style>
+      .collection {
+        border: 1px solid #9b9b9b;
+      }
+
+      .collection .collection-item {
+        background-color: #4c4c4c;
+        cursor: pointer;
+      }
+
+      .collection .collection-item.avatar {
+        min-height: 101px;
+        padding-left: 160px;
+        position: relative;
+      }
+
+      .collection-item .title {
+        font-weight: bold;
+        font-size: 20px;
+      }
+
+      .collection-item p {
+        margin: 0;
+        color: #a5a3a3;
+      }
+
+      .collection-item > .editorVersion {
+        float: right;
+        text-align: right;
+        color: #7d7d7d;
+      }
+    </style>
+  </head>
+  <body>
+    <br />
+    <div class="container">
+      <div class="row" style="color: #d2d2d2">
+        <div class="col s8">
+          <div class="row" style="margin-bottom: 5px">
+            <h4>Hi!</h4>
+            <p class="flow-text">Welcome to the <strong>MCP</strong> Editor!</p>
+          </div>
+        </div>
+      </div>
+      <br />
+      <br />
+      <div class="row">
+        <button class="btn createNewProject">
+          <i class="material-icons left">add</i> Create new Project
+        </button>
+        <button class="btn" id="openProject">
+          <i class="material-icons left">folder_open</i> Open Project
+        </button>
+      </div>
+      <div class="row" id="recentProjectRow">
+        <h5>
+          Recent Projects
+          <a
+            href="#"
+            class="createNewProject right-align"
+            style="color: #d2d2d2"
+            ><i class="material-icons right">add</i></a
+          >
+        </h5>
+        <ul class="collection" id="recentProjects">
+          <!-- Dynamic -->
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      const { ipcRenderer, shell } = require("electron");
+      const { dialog, Menu, getCurrentWindow, app, getGlobal } =
+        require("electron").remote;
+      const prompt = require("electron-prompt");
+      const $ = require("jquery");
+
+      getCurrentWindow().setMenu(
+        Menu.buildFromTemplate([
+          {
+            label: "File",
+            submenu: [
+              {
+                label: "New",
+                role: "new",
+                click: () => {
+                  ipcRenderer.send("showCreateNewProject");
+                },
+              },
+              {
+                label: "Open",
+                role: "open",
+                click: () => {
+                  ipcRenderer.send("showOpenProject");
+                },
+              },
+              {
+                type: "separator",
+              },
+              {
+                role: "toggledevtools",
+              },
+            ],
+          },
+        ])
+      );
+
+      ipcRenderer.send("getRecentProjects");
+
+      $(".createNewProject").click(() => {
+        ipcRenderer.send("showCreateNewProject");
+      });
+
+      $("#openProject").click(() => {
+        ipcRenderer.send("showOpenProject");
+      });
+
+      ipcRenderer.on("recentProjects", (event, arg) => {
+        for (let i = 0; i < arg.length; i++) {
+          if (!arg[i] || !arg[i].path) continue;
+          let item = $(
+            '<li class="collection-item avatar">' +
+              '<span class="title">' +
+              arg[i].name +
+              "</span><p>" +
+              arg[i].path +
+              '</p><span class="editorVersion">' +
+              arg[i].editorVersion +
+              "</span></li>"
+          );
+          item.click(() => {
+            ipcRenderer.send("openProject", arg[i].path);
+            analytics.event("Home", "Open Recent Project").send();
+          });
+          item.appendTo($("#recentProjects"));
+        }
+        if (arg.length === 0) {
+          $("#recentProjectRow").hide();
+        }
+      });
+
+      // external links
+      $(document).on("click", 'a[href^="http"]', (event) => {
+        event.preventDefault();
+        shell.openExternal(this.href);
+        analytics.pageview(this.href).send();
+      });
+    </script>
+  </body>
+</html>
