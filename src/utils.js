@@ -270,8 +270,22 @@ const wrapCanvasText = (context, text, x, y, maxWidth, lineHeight) => {
     }
   }
   context.fillText(line, x, y);
-  
+
   return textHeight;
 };
 
-module.exports = { copyFile, types, isPrimitive, isNumber, nullType, parseTypeSwitchEnum, getNumberSuffix, shapeAndColorsForSlotType, updateLinkColors, scrollSpeedForLength, handleDescDrawBackground, handleDescDrawBackground, wrapCanvasText }
+module.exports = {
+  copyFile,
+  types,
+  isPrimitive,
+  isNumber,
+  nullType,
+  parseTypeSwitchEnum,
+  getNumberSuffix,
+  shapeAndColorsForSlotType,
+  updateLinkColors,
+  scrollSpeedForLength,
+  handleDescDrawBackground,
+  handleDescOnBounding,
+  wrapCanvasText,
+};
