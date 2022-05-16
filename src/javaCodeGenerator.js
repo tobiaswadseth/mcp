@@ -1,5 +1,5 @@
 const ClassDataStore = require("./classDataStore");
-const { getNullForType } = require("./util");
+const { nullType } = require("./util");
 
 const classStore = new ClassDataStore();
 
@@ -508,7 +508,7 @@ const generateCodeForMethodNode = (
           code +=
             nodeReturn(node.id) +
             "=" +
-            getNullForType(sourceOutput ? sourceOutput.type : null) +
+            nullType(sourceOutput ? sourceOutput.type : null) +
             ";\n";
         }
         break;
@@ -516,7 +516,7 @@ const generateCodeForMethodNode = (
 
       if (!linkInfo || !sourceNode) {
         let param = methodData.parameters[i - paramOffset];
-        params.push(getNullForType(param ? param.type.qualifiedName : null));
+        params.push(nullType(param ? param.type.qualifiedName : null));
       } else {
         params.push(nodeOutput(linkInfo.origin_id, linkInfo.origin_slot));
       }
@@ -623,9 +623,7 @@ const generateCodeForConstructorNode = (
 
       if (input.linkType === "constructorParam") {
         if (!input.link || !linkInfo) {
-          params[input.paramIndex] = getNullForType(
-            input.paramType || input.name
-          );
+          params[input.paramIndex] = nullType(input.paramType || input.name);
           continue;
         }
 
