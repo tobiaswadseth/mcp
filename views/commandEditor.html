@@ -90,8 +90,9 @@
     <script>
       const { ipcRenderer } = require("electron");
       const { Menu, getCurrentWindow, getGlobal } = require("electron").remote;
-      const prompt = require("electron-prompt");
       const $ = require("jquery");
+
+      Menu.setApplicationMenu(null);
 
       let custom = getCurrentWindow().custom;
       let commandInfo = custom.command;

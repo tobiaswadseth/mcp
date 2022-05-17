@@ -1,2 +1,4 @@
 /node_modules
 /livereload/target
+**/.DS_Store
+/dist

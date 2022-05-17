@@ -80,38 +80,37 @@
       const { ipcRenderer, shell } = require("electron");
       const { dialog, Menu, getCurrentWindow, app, getGlobal } =
         require("electron").remote;
-      const prompt = require("electron-prompt");
       const $ = require("jquery");
 
-      getCurrentWindow().setMenu(
-        Menu.buildFromTemplate([
-          {
-            label: "File",
-            submenu: [
-              {
-                label: "New",
-                role: "new",
-                click: () => {
-                  ipcRenderer.send("showCreateNewProject");
-                },
+      let menu = Menu.buildFromTemplate([
+        {
+          label: "File",
+          submenu: [
+            {
+              label: "New",
+              role: "new",
+              click: () => {
+                ipcRenderer.send("showCreateNewProject");
               },
-              {
-                label: "Open",
-                role: "open",
-                click: () => {
-                  ipcRenderer.send("showOpenProject");
-                },
+            },
+            {
+              label: "Open",
+              role: "open",
+              click: () => {
+                ipcRenderer.send("showOpenProject");
               },
-              {
-                type: "separator",
-              },
-              {
-                role: "toggledevtools",
-              },
-            ],
-          },
-        ])
-      );
+            },
+            {
+              type: "separator",
+            },
+            {
+              role: "toggledevtools",
+            },
+          ],
+        },
+      ]);
+
+      Menu.setApplicationMenu(menu);
 
       ipcRenderer.send("getRecentProjects");
 

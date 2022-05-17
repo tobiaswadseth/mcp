@@ -21,7 +21,7 @@ function testForJavac() {
 function compile(rootDir, projectInfo) {
   return new Promise((resolve, reject) => {
     let classpath = [];
-    classpath.push(path.join(rootDir, "lib", "spigot.jar"));
+    classpath.push(path.join(rootDir, "lib", "spigot-api.jar"));
 
     let cl =
       'javac -cp "' +

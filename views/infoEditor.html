@@ -116,29 +116,10 @@
     <script>
       const { ipcRenderer } = require("electron");
       const { Menu, getCurrentWindow, getGlobal } = require("electron").remote;
-      const prompt = require("electron-prompt");
       const $ = require("jquery");
 
       let projectInfo = {};
       let commands = [];
-
-      getCurrentWindow().setMenu(
-        Menu.buildFromTemplate([
-          {
-            label: "File",
-            submenu: [
-              {
-                label: "Save",
-                role: "new",
-                accelerator: "CommandOrControl+S",
-                click: () => {
-                  updateProjectInfo();
-                },
-              },
-            ],
-          },
-        ])
-      );
 
       window.onbeforeunload = (e) => {
         updateProjectInfo();
@@ -165,7 +146,7 @@
         projectInfo.commands = commands || [];
 
         ipcRenderer.send("updateProjectInfo", projectInfo);
-      }
+      };
 
       ipcRenderer.send("getProjectInfo");
 
@@ -209,7 +190,7 @@
           });
           commandItem.appendTo($("#commandList"));
         }
-      }
+      };
 
       $("#addCommand").click((e) => {
         ipcRenderer.send("openCommandEditor", {

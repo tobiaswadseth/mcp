@@ -29,7 +29,7 @@
     <div id="content"></div>
     <script>
       const { ipcRenderer, shell } = require("electron");
-      const { getCurrentWindow } = require("electron").remote;
+      const { getCurrentWindow, Menu } = require("electron").remote;
       const $ = require("jquery");
 
       String.prototype.replaceAll = (search, replacement) => {

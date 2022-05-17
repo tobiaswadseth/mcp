@@ -17,6 +17,7 @@ function start(projectPath, out, err) {
       "-Dcom.mojang.eula.agree=true",
       "-jar",
       "spigot.jar",
+      "nogui",
     ],
     {
       cwd: path.join(projectPath, "lib"),
@@ -56,7 +57,7 @@ function copy(projectPath, projectInfo, skipEmpty, skipReloadHelper) {
             copyFile(
               path.join(__dirname, "../assets/lib/livereload.jar"),
               path.join(projectPath, "lib", "plugins", "livereload.jar")
-            );
+            ).then(resolve);
           }
         })
         .catch(reject);

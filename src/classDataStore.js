@@ -24,7 +24,6 @@ const INTERFACE_DUMMY_CONSTRUCTOR = {
 function ClassDataStore() {
   this.store = {};
   this.loadClassFile = function(fileName) {
-    console.log(path.join(__dirname, "../data", fileName + ".json"));
     return new Promise((resolve, reject) => {
       fs.readFile(path.join(__dirname, "../data", fileName + ".json"),
         "utf-8",

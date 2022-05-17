@@ -1,13 +1,6 @@
 <html>
   <head>
     <style>
-      .logo {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 2px;
-      }
-
       #log {
         font-family: Consolas, monospace;
         color: white;
@@ -44,9 +37,6 @@
     </style>
   </head>
   <body>
-    <div>
-      <img class="logo" src="../assets/images/logo-x256.png" />
-    </div>
     <div id="log"></div>
     <input id="cmdInput" type="text" autofocus onblur="this.focus()" />
     <script>
@@ -54,51 +44,10 @@
       const { Menu, getCurrentWindow, getGlobal } = require("electron").remote;
       const $ = require("jquery");
 
-      String.prototype.replaceAll = (search, replacement) => {
+      String.prototype.replaceAll = function (search, replacement) {
         var target = this;
         return target.replace(new RegExp(search, "g"), replacement);
       };
-
-      let followLog = true;
-
-      getCurrentWindow().setMenu(
-        Menu.buildFromTemplate([
-          {
-            label: "Log",
-            submenu: [
-              {
-                label: "Follow Log",
-                type: "checkbox",
-                checked: true,
-                click: (item) => {
-                  console.log(item);
-                  followLog = item.checked;
-                },
-              },
-            ],
-          },
-          {
-            label: "Server",
-            submenu: [
-              {
-                label: "Stop Server",
-                click: () => {
-                  ipcRenderer.send("stopServer");
-                },
-              },
-              {
-                type: "separator",
-              },
-              {
-                label: "Reload Plugin",
-                click: () => {
-                  ipcRenderer.send("reloadPlugin");
-                },
-              },
-            ],
-          },
-        ])
-      );
 
       let cmdInput = $("#cmdInput");
       cmdInput.on("keypress", (e) => {
@@ -149,9 +98,7 @@
           });
         }
         entry.appendTo($("#log"));
-        if (followLog) {
-          window.scrollTo(0, document.body.scrollHeight);
-        }
+        window.scrollTo(0, document.body.scrollHeight);
       });
 
       window.onbeforeunload = (e) => {

@@ -1,4 +1,11 @@
-const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  dialog,
+  shell,
+  Menu,
+} = require("electron");
 const javaCompiler = require("./src/javaCompiler");
 const serverStarter = require("./src/serverStarter");
 const path = require("path");
@@ -32,8 +39,8 @@ const init = () => {
     show: false,
     backgroundColor: "#373737",
     webPreferences: {
-        nodeIntegration: true
-    }
+      nodeIntegration: true,
+    },
   });
 
   showWindow();
@@ -237,46 +244,75 @@ ipcMain.on("showCreateNewProject", () => {
 
   let name = pathSplit[pathSplit.length - 1];
 
-      dialog.showMessageBox(
-        {
-          title: "Select spigot.jar location",
-          message:
-            "Please select the location of a valid Spigot or Paper Server executable (usually spigot.jar)",
-          buttons: ["Select", "I don't have one"],
-        },
-        (r) => {
-          if (r === 0) {
-            let libPath = dialog.showOpenDialog({
-              properties: ["openFile"],
-              filters: [{ name: "Spigot JAR file", extensions: ["jar"] }],
-            });
-            if (!libPath || libPath.length === 0) {
-              return;
-            }
-            if (Array.isArray(libPath)) {
-              libPath = libPath[0];
-              if (!libPath || libPath.length === 0) {
-                return;
-              }
-            }
-
-            createNewProject(
-              {
-                path: projectPath,
-                name: name,
-              },
-              libPath
-            );
-          } else {
-            shell.openExternal(
-              "https://www.spigotmc.org/wiki/buildtools/#running-buildtools"
-            );
+  dialog.showMessageBox(
+    {
+      title: "Select spigot.jar location",
+      message: "Please select the location of a valid Spigot jar",
+      buttons: ["Select", "I don't have one"],
+    },
+    (r) => {
+      if (r === 0) {
+        let libPath = dialog.showOpenDialog({
+          properties: ["openFile"],
+          filters: [{ name: "Spigot JAR file", extensions: ["jar"] }],
+        });
+        if (!libPath || libPath.length === 0) {
+          return;
+        }
+        if (Array.isArray(libPath)) {
+          libPath = libPath[0];
+          if (!libPath || libPath.length === 0) {
+            return;
           }
         }
-      );
+
+        dialog.showMessageBox(
+          {
+            title: "Select spigot-api.jar location",
+            message: "Please select the location of a valid Spigot API jar",
+            buttons: ["Select", "I don't have one"],
+          },
+          (res) => {
+            if (res === 0) {
+              let apiPath = dialog.showOpenDialog({
+                properties: ["openFile"],
+                filters: [{ name: "Spigot API JAR file", extensions: ["jar"] }],
+              });
+              if (!apiPath || apiPath.length === 0) {
+                return;
+              }
+              if (Array.isArray(apiPath)) {
+                apiPath = apiPath[0];
+                if (!apiPath || apiPath.length === 0) {
+                  return;
+                }
+              }
+
+              createNewProject(
+                {
+                  path: projectPath,
+                  name: name,
+                },
+                libPath,
+                apiPath
+              );
+            } else {
+              shell.openExternal(
+                "https://www.spigotmc.org/wiki/buildtools/#running-buildtools"
+              );
+            }
+          }
+        );
+      } else {
+        shell.openExternal(
+          "https://www.spigotmc.org/wiki/buildtools/#running-buildtools"
+        );
+      }
+    }
+  );
 });
 
-const createNewProject = (arg, lib) => {
+const createNewProject = (arg, lib, api) => {
   let projectFilePath = path.join(arg.path, "project.json");
   if (fs.existsSync(projectFilePath)) {
     dialog.showErrorBox(
@@ -290,7 +326,7 @@ const createNewProject = (arg, lib) => {
     indeterminate: false,
     text: "Creating Project...",
     detail: "Creating Project...",
-    maxValue: 5,
+    maxValue: 6,
   });
 
   let projectInfo = {
@@ -345,53 +381,62 @@ const createNewProject = (arg, lib) => {
 
           progressBar.detail = "Copying server .jar file...";
 
-          let rs = fs.createReadStream(lib);
-          let ws = fs.createWriteStream(
+          let rsLib = fs.createReadStream(lib);
+          let wsLib = fs.createWriteStream(
             path.join(currentProjectPath, "lib", "spigot.jar")
           );
-          ws.on("close", () => {
+          wsLib.on("close", () => {
             progressBar.value++;
-            progressBar.detail = "Setting up graph file...";
-
-            fs.writeFile(
-              path.join(arg.path, "graph.json"),
-              JSON.stringify({}),
-              "utf-8",
-              (err) => {
-                progressBar.value++;
-                if (err) {
-                  console.error("Failed to create graph file");
-                  console.error(err);
-                  return;
-                }
-
-                recentProjects.unshift({
-                  path: currentProjectPath,
-                  name: currentProject.name,
-                  editorVersion: currentProject.editorVersion,
-                });
-                writeRecentProjects();
-
-                app.addRecentDocument(
-                  path.join(currentProjectPath, currentProject.name + ".json")
-                );
-                updateJumpList();
-
-                progressBar.value++;
-
-                progressBar.detail = "Done!";
-
-                if (win) {
-                  win.loadFile("views/graph.html");
-                  win.setTitle(
-                    DEFAULT_TITLE + " [" + currentProject.name + "]"
-                  );
-                  progressBar.value++;
-                }
-              }
+            progressBar.detail = "Copying server api .jar file...";
+            let rsApi = fs.createReadStream(api);
+            let wsApi = fs.createWriteStream(
+              path.join(currentProjectPath, "lib", "spigot-api.jar")
             );
+            wsApi.on("close", () => {
+              progressBar.value++;
+              progressBar.detail = "Setting up graph file...";
+
+              fs.writeFile(
+                path.join(arg.path, "graph.json"),
+                JSON.stringify({}),
+                "utf-8",
+                (err) => {
+                  progressBar.value++;
+                  if (err) {
+                    console.error("Failed to create graph file");
+                    console.error(err);
+                    return;
+                  }
+
+                  recentProjects.unshift({
+                    path: currentProjectPath,
+                    name: currentProject.name,
+                    editorVersion: currentProject.editorVersion,
+                  });
+                  writeRecentProjects();
+
+                  app.addRecentDocument(
+                    path.join(currentProjectPath, currentProject.name + ".json")
+                  );
+                  updateJumpList();
+
+                  progressBar.value++;
+
+                  progressBar.detail = "Done!";
+
+                  if (win) {
+                    win.loadFile("views/graph.html");
+                    win.setTitle(
+                      DEFAULT_TITLE + " [" + currentProject.name + "]"
+                    );
+                    progressBar.value++;
+                  }
+                }
+              );
+            });
+            rsApi.pipe(wsApi);
           });
-          rs.pipe(ws);
+          rsLib.pipe(wsLib);
         }
       );
     }, 500);
@@ -567,6 +612,11 @@ ipcMain.on("getGraphData", (event) => {
         importSnippet(
           path.join(__dirname, "assets", "default", "snippet.json")
         );
+        fs.readFile(path.join(__dirname, "assets", "default", "snippet.json"), (err, data) => {
+            if (err) throw err;
+            if (!win) return;
+            saveGraphData(data);
+        })
       }
     }
   );
@@ -896,13 +946,15 @@ ipcMain.on("saveCommand", (event, arg) => {
   }
 });
 
-ipcMain.on("startServer", () => {
+ipcMain.on("startServer", (event) => {
   if (!currentProject || !currentProjectPath) {
     return;
   }
-  if (logWin) logWin.destroy();
-  logWin = null;
-  serverStarter.kill();
+  if (logWin) {
+    logWin.destroy();
+    logWin = null;
+    serverStarter.kill();
+  }
 
   if (
     !fs.existsSync(
@@ -948,7 +1000,7 @@ ipcMain.on("startServer", () => {
             if (log.indexOf("Starting Minecraft server on") !== -1) {
               port = log
                 .substr(24 /* strip timestamp & start of string */)
-                .split(":")[1];
+                .split(":")[2];
             }
             if (
               log.indexOf("Done (") !== -1 &&
@@ -971,7 +1023,6 @@ ipcMain.on("startServer", () => {
                 if (win) win.webContents.send("logError", log);
               }
             }
-
             logWin.webContents.send("log", logData);
           }
         }

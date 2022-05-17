@@ -68,7 +68,7 @@
       const $ = require("jquery");
       const { updateLinkColors } = require("../src/util");
 
-      let theMenu = Menu.buildFromTemplate([
+      let menu = Menu.buildFromTemplate([
         {
           label: "File",
           submenu: [
@@ -258,7 +258,8 @@
           ],
         },
       ]);
-      getCurrentWindow().setMenu(theMenu);
+
+      Menu.setApplicationMenu(menu);
 
       let projectInfo = {};
       let isNewProject = false;
@@ -334,11 +335,9 @@
           className,
           classType
         );
-        console.log(nodeName);
         if (!nodeName) return;
         let node = LiteGraph.createNode(nodeName);
         if (!node) return;
-        console.log(node);
         graph.add(node);
       }
 
@@ -393,36 +392,30 @@
       }
 
       function undo() {
-        console.log("canUndo: " + history.canUndo());
         history.pause();
         if (history.canUndo()) {
           let undone = history.undo();
-          console.log(undone);
           graph.configure(JSON.parse(undone));
         }
         history.unpause();
-        console.log(history);
 
         refreshHistoryState();
       }
 
       function redo() {
-        console.log("canRedo: " + history.canRedo());
         history.pause();
         if (history.canRedo()) {
           let redone = history.redo();
-          console.log(redone);
           graph.configure(JSON.parse(redone));
         }
         history.unpause();
-        console.log(history);
 
         refreshHistoryState();
       }
 
       function refreshHistoryState() {
-        theMenu.getMenuItemById("undo").enabled = history.canUndo();
-        theMenu.getMenuItemById("redo").enabled = history.canRedo();
+        menu.getMenuItemById("undo").enabled = history.canUndo();
+        menu.getMenuItemById("redo").enabled = history.canRedo();
       }
 
       function serializeSnippet() {
@@ -520,7 +513,6 @@
           }
           node.id = newId;
 
-          console.log(node);
           graph.add(node, true);
         }
         for (let j = 0; j < data.links.length; j++) {
@@ -595,12 +587,8 @@
         projectInfo = arg;
         isNewProject = projectInfo.isNewProject;
         delete projectInfo.isNewProject;
-        console.log("Project:");
-        console.log(arg);
-        console.log("Is New:", isNewProject);
 
         if (!nodesInitialized) {
-          console.log("Initializing Bukkit Node generator...");
           NodeGenerator.init().then(() => {
             nodesInitialized = true;
             ipcRenderer.send("getGraphData");
@@ -643,7 +631,7 @@
       });
 
       ipcRenderer.on("logError", (event, arg) => {
-        console.log("logError", arg);
+        console.error("logError", arg);
 
         highlightAffectedNodes(arg, false);
       });
@@ -657,7 +645,6 @@
 
       function highlightAffectedNodes(arg, deselectFirst) {
         let affectedNode = /node_([0-9]+)/gm.exec(arg);
-        console.log(affectedNode);
 
         if (deselectFirst) {
           for (let i = 0; i < graph._nodes.length; i++) {
@@ -688,7 +675,6 @@
       ipcRenderer.on("highlightNode", (event, arg) => {
         let node = graph.getNodeById(arg.node);
         if (node) {
-          console.log(node);
           canvas.selectNode(node);
           canvas.centerOnNode(node);
           canvas.setZoom(2);

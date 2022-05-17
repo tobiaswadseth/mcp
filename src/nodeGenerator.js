@@ -121,7 +121,8 @@ function onEventAdd(node, options, e, prevMenu) {
     let nodeName = getOrCreateBukkitClassNode(v.value);
     var node = LiteGraph.createNode(nodeName);
     if (node) {
-      node.pos = canvas.convertEventToCanvas(first_event);
+      console.log(canvas);
+      node.pos = canvas.convertEventToCanvasOffset(first_event);
       canvas.graph.add(node);
     }
   }
@@ -176,7 +177,8 @@ function onObjectAdd(node, options, e, prevMenu) {
     let nodeName = getOrCreateBukkitClassNode(v.value);
     var node = LiteGraph.createNode(nodeName);
     if (node) {
-      node.pos = canvas.convertEventToCanvas(first_event);
+      console.log(canvas);
+      node.pos = canvas.convertEventToCanvasOffset(first_event);
       canvas.graph.add(node);
     }
   }
@@ -272,7 +274,8 @@ function onMethodAdd(node, options, e, prevMenu) {
     let nodeName = getOrCreateBukkitMethodNode(v.value.class, v.value.method);
     var node = LiteGraph.createNode(nodeName);
     if (node) {
-      node.pos = canvas.convertEventToCanvas(first_event);
+      console.log(canvas);
+      node.pos = canvas.convertEventToCanvasOffset(first_event);
       canvas.graph.add(node);
     }
   }
