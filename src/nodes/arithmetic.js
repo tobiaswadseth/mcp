@@ -4,12 +4,12 @@ const {
   handleDescDrawBackground,
 } = require("../util");
 
-const ArithmeticOperator = () => {
+function ArithmeticOperator() {
   this.classType = "native";
   this.operation = "?";
-};
+}
 
-ArithmeticOperator.prototype.init = () => {
+ArithmeticOperator.prototype.init = function () {
   this.addProperty("type", "int", "enum", {
     values: ["byte", "char", "short", "int", "long", "float", "double"],
   });
@@ -30,7 +30,7 @@ ArithmeticOperator.prototype.init = () => {
   });
 };
 
-ArithmeticOperator.prototype.onDrawBackground = (ctx) => {
+ArithmeticOperator.prototype.onDrawBackground = function (ctx) {
   this.outputs[1].type = this.properties.type;
   this.inputs[1].type = this.properties.type;
   this.inputs[2].type = this.properties.type;
@@ -50,68 +50,68 @@ ArithmeticOperator.prototype.onDrawBackground = (ctx) => {
   handleDescDrawBackground.call(this, ctx);
 };
 
-ArithmeticOperator.prototype.getFields = (output) => {
+ArithmeticOperator.prototype.getFields = function (output) {
   return [this.properties.type + " " + output[1]];
 };
-ArithmeticOperator.prototype.getMethodBody = (input, output) => {
+ArithmeticOperator.prototype.getMethodBody = function (input, output) {
   return output[1] + " = " + input[1] + this.operation + input[2] + ";";
 };
-ArithmeticOperator.prototype.getExecAfter = (exec) => {
+ArithmeticOperator.prototype.getExecAfter = function (exec) {
   return exec[0].join("\n");
 };
 ArithmeticOperator.prototype.onDrawTitleBox =
   require("../fontAwesomeHelper").handleDrawTitleBox;
 
-const extend = (ChildClass, ParentClass) => {
+function extend(ChildClass, ParentClass) {
   ChildClass.prototype = new ParentClass();
   ChildClass.prototype.constructor = ChildClass;
   return ChildClass;
-};
+}
 
 /// Add
 
-const Add = () => {
+function Add() {
   this.operation = "+";
   this.iconName = "plus";
   this.desc = "Add two numbers";
   this.init();
-};
+}
 
 /// Subtract
 
-const Subtract = () => {
+function Subtract() {
   this.operation = "-";
   this.iconName = "minus";
   this.desc = "Subtract two numbers";
   this.init();
-};
+}
 
 /// Multiply
 
-const Multiply = () => {
+function Multiply() {
   this.operation = "*";
   this.iconName = "times";
   this.desc = "Multiply two numbers";
   this.init();
-};
+}
 
 /// Divide
 
-const Divide = () => {
+function Divide() {
   this.operation = "/";
   this.iconName = "divide";
   this.desc = "Divide two numbers";
   this.init();
-};
+}
 
 /// Modulus
 
-const Modulus = () => {
+function Modulus() {
   this.operation = "%";
   this.iconName = "percentage";
   this.desc = "Calculate the modulus of two numbers";
   this.init();
-};
+}
 
 module.exports = [
   extend(Add, ArithmeticOperator),

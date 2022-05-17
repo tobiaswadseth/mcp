@@ -1,12 +1,11 @@
 const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron");
 const javaCompiler = require("./src/javaCompiler");
 const serverStarter = require("./src/serverStarter");
-const prompt = require("electron-prompt");
 const path = require("path");
 const fs = require("fs-extra");
 const notifier = require("node-notifier");
 const ProgressBar = require("electron-progressbar");
-const { copyFile } = require("./src/utils");
+const { copyFile } = require("./src/util");
 const AdmZip = require("adm-zip");
 
 const DEFAULT_TITLE = "MCP Editor";
@@ -32,6 +31,9 @@ const init = () => {
     height: 800,
     show: false,
     backgroundColor: "#373737",
+    webPreferences: {
+        nodeIntegration: true
+    }
   });
 
   showWindow();
@@ -231,17 +233,9 @@ ipcMain.on("showCreateNewProject", () => {
       return;
     }
   }
-  let pathSplit = projectPath.split("\\");
+  let pathSplit = projectPath.split("/");
 
   let name = pathSplit[pathSplit.length - 1];
-  prompt({
-    title: "Give your project a name",
-    label: "Project Name",
-    value: name,
-    height: 150,
-  }).then((r) => {
-    if (r) {
-      name = r;
 
       dialog.showMessageBox(
         {
@@ -280,8 +274,6 @@ ipcMain.on("showCreateNewProject", () => {
           }
         }
       );
-    }
-  });
 });
 
 const createNewProject = (arg, lib) => {
@@ -573,7 +565,7 @@ ipcMain.on("getGraphData", (event) => {
 
       if (isNewProject) {
         importSnippet(
-          path.join(__dirname, "assets", "snippets", "onEnableLog.json")
+          path.join(__dirname, "assets", "default", "snippet.json")
         );
       }
     }

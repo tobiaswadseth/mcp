@@ -3,12 +3,12 @@ const app = electron.app || electron.remote.app;
 const path = require("path");
 const fs = require("fs-extra");
 const { spawn } = require("child_process");
-const { copyFile } = require("./utils");
+const { copyFile } = require("./util");
 
 let running = false;
 let instance = null;
 
-const start = (projectPath, out, err) => {
+function start(projectPath, out, err) {
   if (running || instance) return false;
   let spawned = spawn(
     "java",
@@ -39,35 +39,28 @@ const start = (projectPath, out, err) => {
     instance = null;
   });
   return true;
-};
+}
 
-const copy = (
-  projectPath,
-  projectInfo,
-  skipEmpty,
-  skipReloadHelper
-) => {
+function copy(projectPath, projectInfo, skipEmpty, skipReloadHelper) {
   let name = projectInfo.name;
   return new Promise((resolve, reject) => {
-    const doCopy = () => {
+    function doCopy() {
       copyFile(
         path.join(projectPath, "output", name + ".jar"),
         path.join(projectPath, "lib", "plugins", name + ".jar")
       )
         .then(() => {
-          if (
-            skipReloadHelper
-          ) {
+          if (skipReloadHelper) {
             resolve();
           } else {
             copyFile(
               path.join(__dirname, "../assets/lib/livereload.jar"),
               path.join(projectPath, "lib", "plugins", "livereload.jar")
-            )
+            );
           }
         })
         .catch(reject);
-    };
+    }
 
     let pluginsDir = path.join(projectPath, "lib", "plugins");
     if (fs.existsSync(pluginsDir)) {
@@ -86,18 +79,18 @@ const copy = (
       });
     }
   });
-};
+}
 
-const sendCommand = (command, callback) => {
+function sendCommand(command, callback) {
   if (!running) return;
   if (!instance) return;
   if (!instance.stdin) return;
   instance.stdin.write(command + "\n", callback);
-};
+}
 
-const kill = () => {
+function kill() {
   if (instance) instance.kill();
-};
+}
 
 module.exports = {
   start,

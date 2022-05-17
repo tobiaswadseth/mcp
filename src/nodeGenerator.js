@@ -30,7 +30,7 @@ const nodes = [
 
 const classStore = new ClassDataStore();
 
-const inputOutputSorter = (a, b) => {
+function inputOutputSorter(a, b) {
   var nameA = a.name.toUpperCase();
   var nameB = b.name.toUpperCase();
 
@@ -50,9 +50,9 @@ const inputOutputSorter = (a, b) => {
 
   // names must be equal
   return 0;
-};
+}
 
-const optionalInputOutputSorter = (a, b) => {
+function optionalInputOutputSorter(a, b) {
   var nameA = a[0].toUpperCase();
   var nameB = b[0].toUpperCase();
 
@@ -72,9 +72,9 @@ const optionalInputOutputSorter = (a, b) => {
 
   // names must be equal
   return 0;
-};
+}
 
-const onEventAdd = (node, options, e, prevMenu) => {
+function onEventAdd(node, options, e, prevMenu) {
   let entries = [];
   let existingCategories = [];
   let classesByName = classStore.getClassesByName();
@@ -95,7 +95,7 @@ const onEventAdd = (node, options, e, prevMenu) => {
     parentMenu: prevMenu,
   });
 
-  const inner_clicked = (v, option, e) => {
+  function inner_clicked(v, option, e) {
     var values = [];
     for (let c in classesByName) {
       if (!c.startsWith("org.bukkit")) continue;
@@ -114,9 +114,9 @@ const onEventAdd = (node, options, e, prevMenu) => {
       parentMenu: menu,
     });
     return false;
-  };
+  }
 
-  const inner_create = (v) => {
+  function inner_create(v) {
     var first_event = prevMenu.getFirstEvent();
     let nodeName = getOrCreateBukkitClassNode(v.value);
     var node = LiteGraph.createNode(nodeName);
@@ -124,10 +124,10 @@ const onEventAdd = (node, options, e, prevMenu) => {
       node.pos = canvas.convertEventToCanvas(first_event);
       canvas.graph.add(node);
     }
-  };
-};
+  }
+}
 
-const onObjectAdd = (node, options, e, prevMenu) => {
+function onObjectAdd(node, options, e, prevMenu) {
   let entries = [];
   let existingCategories = [];
   let classesByName = classStore.getClassesByName();
@@ -149,7 +149,7 @@ const onObjectAdd = (node, options, e, prevMenu) => {
     scroll_speed: scrollSpeedForLength(entries.length),
   });
 
-  const inner_clicked = (v, option, e) => {
+  function inner_clicked(v, option, e) {
     var values = [];
     for (let c in classesByName) {
       if (!c.startsWith("org.bukkit")) continue;
@@ -169,9 +169,9 @@ const onObjectAdd = (node, options, e, prevMenu) => {
       scroll_speed: scrollSpeedForLength(values.length),
     });
     return false;
-  };
+  }
 
-  const inner_create = (v) => {
+  function inner_create(v) {
     var first_event = prevMenu.getFirstEvent();
     let nodeName = getOrCreateBukkitClassNode(v.value);
     var node = LiteGraph.createNode(nodeName);
@@ -179,10 +179,10 @@ const onObjectAdd = (node, options, e, prevMenu) => {
       node.pos = canvas.convertEventToCanvas(first_event);
       canvas.graph.add(node);
     }
-  };
-};
+  }
+}
 
-const onMethodAdd = (node, options, e, prevMenu) => {
+function onMethodAdd(node, options, e, prevMenu) {
   let entries = [];
   let existingCategories = [];
   let classesByName = classStore.getClassesByName();
@@ -205,7 +205,7 @@ const onMethodAdd = (node, options, e, prevMenu) => {
   });
   let menu1;
 
-  const inner_clicked = (v, option, e) => {
+  function inner_clicked(v, option, e) {
     var values = [];
     let existingCategories = [];
     for (let c in classesByName) {
@@ -232,9 +232,9 @@ const onMethodAdd = (node, options, e, prevMenu) => {
       scroll_speed: scrollSpeedForLength(values.length),
     });
     return false;
-  };
+  }
 
-  const inner2_clicked = (v, option, e) => {
+  function inner2_clicked(v, option, e) {
     var values = [];
     let existingCategories = [];
     for (let c in classesByName) {
@@ -265,9 +265,9 @@ const onMethodAdd = (node, options, e, prevMenu) => {
       scroll_speed: scrollSpeedForLength(values.length),
     });
     return false;
-  };
+  }
 
-  const inner_create = (v) => {
+  function inner_create(v) {
     var first_event = prevMenu.getFirstEvent();
     let nodeName = getOrCreateBukkitMethodNode(v.value.class, v.value.method);
     var node = LiteGraph.createNode(nodeName);
@@ -275,10 +275,10 @@ const onMethodAdd = (node, options, e, prevMenu) => {
       node.pos = canvas.convertEventToCanvas(first_event);
       canvas.graph.add(node);
     }
-  };
-};
+  }
+}
 
-const showOptionalSlotMenu = (v, opts, e, prev_menu, node) => {
+function showOptionalSlotMenu(v, opts, e, prev_menu, node) {
   if (!node) return;
 
   var canvas = LGraphCanvas.active_canvas;
@@ -319,7 +319,7 @@ const showOptionalSlotMenu = (v, opts, e, prev_menu, node) => {
     ref_window
   );
 
-  const inner_clicked = (v, e, prev) => {
+  function inner_clicked(v, e, prev) {
     if (!node) return;
 
     if (v.callback) v.callback.call(canvas, node, v, e, prev);
@@ -332,18 +332,18 @@ const showOptionalSlotMenu = (v, opts, e, prev_menu, node) => {
       node.addInput(v.value[0], v.value[1], v.value[2]);
     }
     node.setDirtyCanvas(true, true);
-  };
+  }
 
   return false;
-};
+}
 
-const init = () => {
+function init() {
   return new Promise((resolve) => {
     // Clear default node types
     LiteGraph.registered_node_types = {};
     LiteGraph.Nodes = {};
 
-    LGraphCanvas.prototype.getMenuOptions = () => {
+    LGraphCanvas.prototype.getMenuOptions = function () {
       return [
         {
           content: "Add Generic Node",
@@ -393,16 +393,16 @@ const init = () => {
       }
     );
 
-    LGraphNode.prototype.onConnectionsChange = (slotType, slot) => {
+    LGraphNode.prototype.onConnectionsChange = function (slotType, slot) {
       updateLinkColors(slotType, this, slot);
     };
-    LGraphNode.prototype.getMenuOptions = () => {
+    LGraphNode.prototype.getMenuOptions = function () {
       return [
         {
           content: "Inputs",
           has_submenu: true,
           disabled: !this.optional_inputs || this.optional_inputs.length === 0,
-          callback: (v, opts, e, prev_menu, node) => {
+          callback: function (v, opts, e, prev_menu, node) {
             return showOptionalSlotMenu(
               v,
               Object.assign({}, opts, {
@@ -420,7 +420,7 @@ const init = () => {
           has_submenu: true,
           disabled:
             !this.optional_outputs || this.optional_outputs.length === 0,
-          callback: (v, opts, e, prev_menu, node) => {
+          callback: function (v, opts, e, prev_menu, node) {
             return showOptionalSlotMenu(
               v,
               Object.assign({}, opts, {
@@ -443,17 +443,16 @@ const init = () => {
         },
       ];
     };
-    LGraphNode.prototype.onConfigure = () => {
+    LGraphNode.prototype.onConfigure = function () {
       this.size = this.computeSize();
     };
-    LGraphNode.prototype.onInputDblClick = (i, e) => {
+    LGraphNode.prototype.onInputDblClick = function (i, e) {
       handleSlotDoubleClick(this, "in", i, e);
     };
-    LGraphNode.prototype.onOutputDblClick = (i, e) => {
+    LGraphNode.prototype.onOutputDblClick = function (i, e) {
       handleSlotDoubleClick(this, "out", i, e);
     };
-    LGraphNode.prototype.onMouseDown = (e) => {
-
+    LGraphNode.prototype.onMouseDown = function (e) {
       if (e.shiftKey) {
         let className = this.className;
         if (!className) {
@@ -494,9 +493,9 @@ const init = () => {
       resolve();
     });
   });
-};
+}
 
-const ensureNodeRegistration = () => {
+function ensureNodeRegistration() {
   let classesByName = classStore.getClassesByName();
   for (let n in classesByName) {
     let clazz = classesByName[n];
@@ -517,9 +516,9 @@ const ensureNodeRegistration = () => {
       );
     }
   }
-};
+}
 
-const getOrCreateBukkitClassNode = (className) => {
+function getOrCreateBukkitClassNode(className) {
   let classData = classStore.getClass(className);
   if (!classData) {
     console.warn("Class " + className + " does not exist or isn't loaded");
@@ -533,7 +532,7 @@ const getOrCreateBukkitClassNode = (className) => {
     return categoryName;
   }
 
-  const BukkitClassNode = () => {
+  function BukkitClassNode() {
     addClassIO(this, classData);
 
     if (this.inputs) this.inputs.sort(inputOutputSorter);
@@ -563,7 +562,7 @@ const getOrCreateBukkitClassNode = (className) => {
 
     this.className = classData.qualifiedName;
     this.isClassNode = true;
-  };
+  }
 
   BukkitClassNode.title = simpleClassName;
 
@@ -573,9 +572,9 @@ const getOrCreateBukkitClassNode = (className) => {
   LiteGraph.registerNodeType(categoryName, BukkitClassNode);
 
   return categoryName;
-};
+}
 
-const addClassIO = (node, classData, isChildCall) => {
+function addClassIO(node, classData, isChildCall) {
   if (!isChildCall) {
     if (
       !classData.isEvent &&
@@ -627,7 +626,7 @@ const addClassIO = (node, classData, isChildCall) => {
     node.addProperty("en", classData.enumConstants[0], "enum", {
       values: classData.enumConstants,
     });
-    node.onPropertyChanged = (property, value) => {
+    node.onPropertyChanged = function (property, value) {
       this.outputs[i].label = "[" + value + "]";
       this.outputs[i].enumName = value;
     };
@@ -734,9 +733,9 @@ const addClassIO = (node, classData, isChildCall) => {
       console.warn("Missing class data for superclass " + classData.superclass);
     }
   }
-};
+}
 
-const getOrCreateBukkitMethodNode = (className, methodSignature) => {
+function getOrCreateBukkitMethodNode(className, methodSignature) {
   let classData = classStore.getClass(className);
   if (!classData) {
     console.warn("Class " + className + " does not exist or isn't loaded");
@@ -758,7 +757,7 @@ const getOrCreateBukkitMethodNode = (className, methodSignature) => {
     return categoryName;
   }
 
-  const BukkitMethodNode = () => {
+  function BukkitMethodNode() {
     addMethodIO(this, classData, methodData);
     this.nodeType = "BukkitMethodNode";
     this.iconName = "hashtag";
@@ -768,7 +767,7 @@ const getOrCreateBukkitMethodNode = (className, methodSignature) => {
     this.isMethodNode = true;
 
     this.desc = methodData.comment;
-  };
+  }
 
   BukkitMethodNode.title =
     simpleClassName +
@@ -784,9 +783,9 @@ const getOrCreateBukkitMethodNode = (className, methodSignature) => {
   LiteGraph.registerNodeType(categoryName, BukkitMethodNode);
 
   return categoryName;
-};
+}
 
-const addMethodIO = (node, classData, methodData) => {
+function addMethodIO(node, classData, methodData) {
   let methodSignature = methodData.fullSignature;
 
   if (
@@ -831,9 +830,9 @@ const addMethodIO = (node, classData, methodData) => {
       })
     );
   }
-};
+}
 
-const getOrCreateBukkitAbstractMethodNode = (className, methodSignature) => {
+function getOrCreateBukkitAbstractMethodNode(className, methodSignature) {
   let classData = classStore.getClass(className);
   if (!classData) {
     console.warn("Class " + className + " does not exist or isn't loaded");
@@ -855,7 +854,7 @@ const getOrCreateBukkitAbstractMethodNode = (className, methodSignature) => {
     return categoryName;
   }
 
-  const BukkitAbstractMethodNode = () => {
+  function BukkitAbstractMethodNode() {
     addAbstractMethodIO(this, classData, methodData);
     this.nodeType = "BukkitAbstractMethodNode";
     this.iconName = "sitemap";
@@ -878,9 +877,9 @@ const getOrCreateBukkitAbstractMethodNode = (className, methodSignature) => {
   LiteGraph.registerNodeType(categoryName, BukkitAbstractMethodNode);
 
   return categoryName;
-};
+}
 
-const addAbstractMethodIO = (node, classData, methodData) => {
+function addAbstractMethodIO(node, classData, methodData) {
   let methodSignature = methodData.fullSignature;
 
   addNodeOutput(node, "EXEC", "@EXEC", shapeAndColorsForSlotType("@EXEC"));
@@ -919,9 +918,9 @@ const addAbstractMethodIO = (node, classData, methodData) => {
       })
     );
   }
-};
+}
 
-const getOrCreateBukkitConstructorNode = (className, constructorSignature) => {
+function getOrCreateBukkitConstructorNode(className, constructorSignature) {
   let classData = classStore.getClass(className);
   if (!classData) {
     console.warn("Class " + className + " does not exist or isn't loaded");
@@ -947,7 +946,7 @@ const getOrCreateBukkitConstructorNode = (className, constructorSignature) => {
     return categoryName;
   }
 
-  const BukkitConstructorNode = () => {
+  function BukkitConstructorNode() {
     addConstructorIO(this, classData, constructorData);
     this.nodeType = "BukkitConstructorNode";
     this.iconName = "plus-square";
@@ -957,7 +956,7 @@ const getOrCreateBukkitConstructorNode = (className, constructorSignature) => {
     this.isConstructorNode = true;
 
     this.desc = constructorData.comment;
-  };
+  }
 
   BukkitConstructorNode.title = constructorData.fullFlatSignature;
 
@@ -968,9 +967,9 @@ const getOrCreateBukkitConstructorNode = (className, constructorSignature) => {
   LiteGraph.registerNodeType(categoryName, BukkitConstructorNode);
 
   return categoryName;
-};
+}
 
-const addConstructorIO = (node, classData, constructorData) => {
+function addConstructorIO(node, classData, constructorData) {
   addNodeInput(node, "EXEC", "@EXEC", shapeAndColorsForSlotType("@EXEC"));
   addNodeOutput(node, "EXEC", "@EXEC", shapeAndColorsForSlotType("@EXEC"));
 
@@ -1021,26 +1020,26 @@ const addConstructorIO = (node, classData, constructorData) => {
       );
     }
   }
-};
+}
 
-const checkLambdaOrAbstractMethod = (classData, methodData) => {
+function checkLambdaOrAbstractMethod(classData, methodData) {
   return (
     ((classData.methods.length === 1 ||
       countNonDefaultMethods(classData) === 1) &&
       classData.isInterface) ||
     methodData.isAbstract
   );
-};
+}
 
-const countNonDefaultMethods = (classData) => {
+function countNonDefaultMethods(classData) {
   let c = 0;
   for (let m = 0; m < classData.methods.length; m++) {
     if (!classData.methods[m].isDefault) c++;
   }
   return c;
-};
+}
 
-const addNodeInput = (node, name, type, options, optional) => {
+function addNodeInput(node, name, type, options, optional) {
   if (!node.optional_inputs) node.optional_inputs = [];
   if (!node.inputs) node.inputs = [];
   if (optional) {
@@ -1074,9 +1073,9 @@ const addNodeInput = (node, name, type, options, optional) => {
     node.addInput(name, type, options);
   }
   return node.inputs.length - 1;
-};
+}
 
-const addNodeOutput = (node, name, type, options, optional) => {
+function addNodeOutput(node, name, type, options, optional) {
   if (!node.optional_outputs) node.optional_outputs = [];
   if (!node.outputs) node.outputs = [];
   if (optional) {
@@ -1101,9 +1100,9 @@ const addNodeOutput = (node, name, type, options, optional) => {
     node.addOutput(name, type, options);
   }
   return node.outputs.length - 1;
-};
+}
 
-const handleSlotDoubleClick = (node, type, i, e) => {
+function handleSlotDoubleClick(node, type, i, e) {
   let slot = type === "in" ? node.getInputInfo(i) : node.getOutputInfo(i);
 
   let nodeName;
@@ -1187,7 +1186,7 @@ const handleSlotDoubleClick = (node, type, i, e) => {
       }, 10); // No idea why, but this seems to need a timeout to connect stuff properly
     }
   }
-};
+}
 
 module.exports = {
   init,

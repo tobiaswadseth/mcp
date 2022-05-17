@@ -66,7 +66,7 @@
       const CodeGenerator = require("../src/javaCodeGenerator");
       const History = require("../src/history");
       const $ = require("jquery");
-      const { updateLinkColors } = require("../src/utils");
+      const { updateLinkColors } = require("../src/util");
 
       let theMenu = Menu.buildFromTemplate([
         {
@@ -272,7 +272,7 @@
       var graph = new LGraph();
       if (!graph.config) graph.config = {};
       graph.config.align_to_grid = true;
-      graph.onNodeAdded = (n) => {
+      graph.onNodeAdded = function (n) {
         console.debug("[HISTORY] onNodeAdded");
         if (n) {
           n.size = n.computeSize();
@@ -287,7 +287,7 @@
         updateTitle();
         refreshHistoryState();
       };
-      graph.onNodeRemoved = (n) => {
+      graph.onNodeRemoved = function (n) {
         console.debug("[HISTORY] onNodeRemoved");
         if (history) {
           if (!history.paused) {
@@ -299,7 +299,7 @@
         updateTitle();
         refreshHistoryState();
       };
-      graph.onConnectionChange = () => {
+      graph.onConnectionChange = function () {
         console.debug("[HISTORY] onConnectionChange");
         if (history) {
           if (!history.paused) {
@@ -312,7 +312,7 @@
         refreshHistoryState();
       };
 
-      graph.onNodeConnectionChange = (slotType, node, slot) => {
+      graph.onNodeConnectionChange = function (slotType, node, slot) {
         updateLinkColors(slotType, node, slot);
       };
 
@@ -329,7 +329,7 @@
       $("body")[0].addEventListener("keydown", canvas.processKey.bind(canvas));
       canvas.resize();
 
-      const addBukkitNode = (className, classType) => {
+      function addBukkitNode(className, classType) {
         let nodeName = NodeGenerator.getOrCreateBukkitClassNode(
           className,
           classType
@@ -340,9 +340,9 @@
         if (!node) return;
         console.log(node);
         graph.add(node);
-      };
+      }
 
-      const generateCode = () => {
+      function generateCode() {
         $("#overlay").fadeIn();
         CodeGenerator.generateClassCode(graph, projectInfo).then((code) => {
           ipcRenderer.send("codeGenerated", {
@@ -351,9 +351,9 @@
             pack: false,
           });
         });
-      };
+      }
 
-      const generateCodeCompilePackage = () => {
+      function generateCodeCompilePackage() {
         $("#overlay").fadeIn();
         CodeGenerator.generateClassCode(graph, projectInfo).then((code) => {
           ipcRenderer.send("codeGenerated", {
@@ -362,37 +362,37 @@
             pack: true,
           });
         });
-      };
+      }
 
-      const compile = () => {
+      function compile() {
         $("#overlay").fadeIn();
         ipcRenderer.send("codeGenerated", {
           code: null,
           compile: true,
           pack: false,
         });
-      };
+      }
 
-      const pack = () => {
+      function pack() {
         $("#overlay").fadeIn();
         ipcRenderer.send("codeGenerated", {
           code: null,
           compile: false,
           pack: true,
         });
-      };
+      }
 
-      const saveGraph = () => {
+      function saveGraph() {
         $("#overlay").fadeIn();
         ipcRenderer.send("saveGraphData", graph.serialize());
-      };
+      }
 
-      const saveGraphAndClose = () => {
+      function saveGraphAndClose() {
         $("#overlay").fadeIn();
         ipcRenderer.send("saveGraphDataAndClose", graph.serialize());
-      };
+      }
 
-      const undo = () => {
+      function undo() {
         console.log("canUndo: " + history.canUndo());
         history.pause();
         if (history.canUndo()) {
@@ -404,9 +404,9 @@
         console.log(history);
 
         refreshHistoryState();
-      };
+      }
 
-      const redo = () => {
+      function redo() {
         console.log("canRedo: " + history.canRedo());
         history.pause();
         if (history.canRedo()) {
@@ -418,14 +418,14 @@
         console.log(history);
 
         refreshHistoryState();
-      };
+      }
 
-      const refreshHistoryState = () => {
+      function refreshHistoryState() {
         theMenu.getMenuItemById("undo").enabled = history.canUndo();
         theMenu.getMenuItemById("redo").enabled = history.canRedo();
-      };
+      }
 
-      const serializeSnippet = () => {
+      function serializeSnippet() {
         let nodeIds = [];
         let nodePositions = [];
         let nodes = [];
@@ -491,9 +491,9 @@
           groups: groups,
           zoom: canvas.scale,
         };
-      };
+      }
 
-      const configureSnippet = (data) => {
+      function configureSnippet(data) {
         $("#overlay").fadeIn();
 
         history.track(JSON.stringify(graph.serialize()));
@@ -588,7 +588,7 @@
         refreshHistoryState();
 
         $("#overlay").fadeOut();
-      };
+      }
 
       let nodesInitialized = false;
       ipcRenderer.on("projectInfo", (event, arg) => {
@@ -655,7 +655,7 @@
         configureSnippet(arg);
       });
 
-      const highlightAffectedNodes = (arg, deselectFirst) => {
+      function highlightAffectedNodes(arg, deselectFirst) {
         let affectedNode = /node_([0-9]+)/gm.exec(arg);
         console.log(affectedNode);
 
@@ -670,9 +670,9 @@
             n.has_errors = true;
           }
         }
-      };
+      }
 
-      const updateTitle = () => {
+      function updateTitle() {
         getCurrentWindow().setTitle(
           "MCP Editor [" +
             projectInfo.name +
@@ -683,7 +683,7 @@
               : "") +
             "]"
         );
-      };
+      }
 
       ipcRenderer.on("highlightNode", (event, arg) => {
         let node = graph.getNodeById(arg.node);

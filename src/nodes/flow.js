@@ -2,7 +2,7 @@ const { shapeAndColorsForSlotType } = require("../util");
 
 // Switch (if/else)
 
-const Switch = () => {
+function Switch() {
   this.classType = "native";
   this.desc = "Switch code execution based on a condition";
   this.iconName = "code-branch";
@@ -10,13 +10,13 @@ const Switch = () => {
   this.addOutput("True (if)", "@EXEC", shapeAndColorsForSlotType("@EXEC"));
   this.addOutput("False (else)", "@EXEC", shapeAndColorsForSlotType("@EXEC"));
   this.addInput("Condition", "boolean", shapeAndColorsForSlotType("boolean"));
-};
+}
 
 Switch.title = "Switch";
-Switch.prototype.getMethodBody = (input, output) => {
+Switch.prototype.getMethodBody = function (input, output) {
   return "boolean val = " + input[1] + ";";
 };
-Switch.prototype.getExecAfter = (exec) => {
+Switch.prototype.getExecAfter = function (exec) {
   return (
     "if(val) {\n" +
     exec[0].join("\n") +
@@ -32,7 +32,7 @@ Switch.prototype.onDrawTitleBox =
 
 // For-Loop
 
-const ForLoop = () => {
+function ForLoop() {
   this.classType = "native";
   this.desc = "A for-loop";
   this.iconName = "redo";
@@ -43,13 +43,13 @@ const ForLoop = () => {
   this.addOutput("Loop", "@EXEC", shapeAndColorsForSlotType("@EXEC"));
   this.addOutput("Index", "int", shapeAndColorsForSlotType("int"));
   this.addOutput("Completed", "@EXEC", shapeAndColorsForSlotType("@EXEC"));
-};
+}
 
 ForLoop.title = "ForLoop";
-ForLoop.prototype.getFields = (output) => {
+ForLoop.prototype.getFields = function (output) {
   return ["int " + output[1]];
 };
-ForLoop.prototype.getMethodBody = (input) => {
+ForLoop.prototype.getMethodBody = function (input) {
   return (
     "int startIndex = " +
     input[1] +
@@ -59,7 +59,7 @@ ForLoop.prototype.getMethodBody = (input) => {
     ";\n"
   );
 };
-ForLoop.prototype.getExecAfter = (exec, output) => {
+ForLoop.prototype.getExecAfter = function (exec, output) {
   return (
     "for(int i = startIndex; i < lastIndex; i++) {\n" +
     output[1] +
@@ -75,7 +75,7 @@ ForLoop.prototype.onDrawTitleBox =
 
 // FlipFlop
 
-const FlipFlop = () => {
+function FlipFlop() {
   this.classType = "native";
   this.desc =
     "Each time executed, toggle which router (A/B) is executed, starting with A";
@@ -85,18 +85,18 @@ const FlipFlop = () => {
   this.addOutput("A", "@EXEC", shapeAndColorsForSlotType("@EXEC"));
   this.addOutput("B", "@EXEC", shapeAndColorsForSlotType("@EXEC"));
   this.addOutput("isA", "boolean", shapeAndColorsForSlotType("boolean"));
-};
+}
 
 FlipFlop.title = "FlipFlop";
-FlipFlop.prototype.getFields = (output) => {
+FlipFlop.prototype.getFields = function (output) {
   return ["boolean flipflop_" + this.id, "boolean " + output[2]];
 };
-FlipFlop.prototype.getMethodBody = (input, output) => {
+FlipFlop.prototype.getMethodBody = function (input, output) {
   return (
     "flipflop_" + this.id + " = " + output[2] + " = !flipflop_" + this.id + ";"
   );
 };
-FlipFlop.prototype.getExecBefore = (exec) => {
+FlipFlop.prototype.getExecBefore = function (exec) {
   return (
     "if(flipflop_" +
     this.id +

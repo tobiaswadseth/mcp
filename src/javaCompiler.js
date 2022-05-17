@@ -1,7 +1,7 @@
 const { exec } = require("child_process");
 const path = require("path");
 
-const testForJavac = () => {
+function testForJavac() {
   return new Promise((resolve, reject) => {
     exec("javac -version", (err, stdout, stderr) => {
       if (err) {
@@ -16,9 +16,9 @@ const testForJavac = () => {
       }
     });
   });
-};
+}
 
-const compile = (rootDir, projectInfo) => {
+function compile(rootDir, projectInfo) {
   return new Promise((resolve, reject) => {
     let classpath = [];
     classpath.push(path.join(rootDir, "lib", "spigot.jar"));
@@ -49,9 +49,9 @@ const compile = (rootDir, projectInfo) => {
       });
     });
   });
-};
+}
 
-const package = (rootDir, projectInfo) => {
+function package(rootDir, projectInfo) {
   return new Promise((resolve, reject) => {
     let cl =
       'jar cfm "' +
@@ -74,7 +74,7 @@ const package = (rootDir, projectInfo) => {
       });
     });
   });
-};
+}
 
 module.exports = {
   compile,

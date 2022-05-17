@@ -19,7 +19,7 @@ const onDisableMethods = [];
 const onCommandMethods = [];
 const onTabCompleteMethods = [];
 
-const generateClassCode = (graph, projectInfo) => {
+function generateClassCode(graph, projectInfo) {
   return new Promise((resolve) => {
     classStore.init().then(() => {
       for (let i = 0; i < graph._nodes.length; i++) {
@@ -156,7 +156,7 @@ const generateClassCode = (graph, projectInfo) => {
   });
 };
 
-const generateCodeForEventClassNode = (graph, node) => {
+function generateCodeForEventClassNode (graph, node) {
   let code =
     "" +
     "@org.bukkit.event.EventHandler\n" +
@@ -256,13 +256,13 @@ const generateCodeForEventClassNode = (graph, node) => {
   eventListenerMethods.push(code);
 };
 
-const generateSetterMethodCall = (
+function generateSetterMethodCall (
   methodName,
   targetNode,
   inputIndex,
   obj,
   param
-) => {
+) {
   let code =
     "// SETTER for " +
     targetNode.title +
@@ -287,7 +287,7 @@ const generateSetterMethodCall = (
   return "node_" + targetNode.id + "_in_" + inputIndex;
 };
 
-const generateCodeForObjectClassNode = (graph, node, classData) => {
+function generateCodeForObjectClassNode (graph, node, classData) {
   let field = "private " + node.type + nodeV(node.id) + ";";
 
   let code =
@@ -386,7 +386,7 @@ const generateCodeForObjectClassNode = (graph, node, classData) => {
   return field;
 };
 
-const generateCodeForEnumClassNode = (node, classData) => {
+function generateCodeForEnumClassNode (node, classData) {
   for (let o = 0; o < node.outputs.length; o++) {
     let output = node.outputs[o];
     if (!output) continue;
@@ -409,13 +409,13 @@ const generateCodeForEnumClassNode = (node, classData) => {
   }
 };
 
-const generateCodeForMethodNode = (
+function generateCodeForMethodNode (
   graph,
   node,
   classData,
   methodData,
   isAbstractMethodNode
-) => {
+) {
   let code =
     "// " +
     (isAbstractMethodNode ? "ABSTRACT" : "") +
@@ -572,12 +572,12 @@ const generateCodeForMethodNode = (
   methodCalls.push(code);
 };
 
-const generateCodeForConstructorNode = (
+function generateCodeForConstructorNode (
   graph,
   node,
   classData,
   constructorData
-) => {
+) {
   let code =
     "// CONSTRUCTOR EXECUTION for " +
     constructorData.fullSignature +
@@ -714,7 +714,7 @@ const generateCodeForConstructorNode = (
   constructorCalls.push(code);
 };
 
-const generateCodeForNativeNode = (graph, node) => {
+function generateCodeForNativeNode (graph, node) {
   let inputVars = [];
   if (node.inputs) {
     for (let i = 0; i < node.inputs.length; i++) {
@@ -788,19 +788,19 @@ const generateCodeForNativeNode = (graph, node) => {
   }
 };
 
-const nodeV = (n) => {
+function nodeV (n) {
   return " node_" + n;
 };
 
-const nodeOutput = (n, o) => {
+function nodeOutput (n, o) {
   return " node_" + n + "_output_" + o;
 };
 
-const nodeReturn = (n) => {
+function nodeReturn (n) {
   return " node_" + n + "_return";
 };
 
-const nodeExec = (nodeId) => {
+function nodeExec (nodeId) {
   return " node_" + nodeId + "_exec()";
 };
 

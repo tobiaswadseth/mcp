@@ -2,7 +2,7 @@ const { shapeAndColorsForSlotType } = require("../util");
 
 // NotGate
 
-const NotGate = () => {
+function NotGate() {
   this.classType = "native";
   this.iconName = "dungeon";
 
@@ -11,16 +11,16 @@ const NotGate = () => {
 
   this.addOutput("EXEC", "@EXEC", shapeAndColorsForSlotType("@EXEC"));
   this.addOutput("OUT", "boolean", shapeAndColorsForSlotType("boolean"));
-};
+}
 
 NotGate.title = "NotGate";
-NotGate.prototype.getFields = (output) => {
+NotGate.prototype.getFields = function (output) {
   return ["boolean " + output[1]];
 };
-NotGate.prototype.getMethodBody = (input, output) => {
+NotGate.prototype.getMethodBody = function (input, output) {
   return output[1] + " = !" + input[1] + ";\n";
 };
-NotGate.prototype.getExecAfter = (exec) => {
+NotGate.prototype.getExecAfter = function (exec) {
   return exec[0].join("\n");
 };
 NotGate.prototype.onDrawTitleBox =
@@ -28,7 +28,7 @@ NotGate.prototype.onDrawTitleBox =
 
 // AndGate
 
-const AndGate = () => {
+function AndGate() {
   this.classType = "native";
   this.iconName = "dungeon";
 
@@ -38,16 +38,16 @@ const AndGate = () => {
 
   this.addOutput("EXEC", "@EXEC", shapeAndColorsForSlotType("@EXEC"));
   this.addOutput("OUT", "boolean", shapeAndColorsForSlotType("boolean"));
-};
+}
 
 AndGate.title = "AndGate";
-AndGate.prototype.getFields = (output) => {
+AndGate.prototype.getFields = function (output) {
   return ["boolean " + output[1]];
 };
-AndGate.prototype.getMethodBody = (input, output) => {
+AndGate.prototype.getMethodBody = function (input, output) {
   return output[1] + " = " + input[1] + " && " + input[2] + ";\n";
 };
-AndGate.prototype.getExecAfter = (exec) => {
+AndGate.prototype.getExecAfter = function (exec) {
   return exec[0].join("\n");
 };
 AndGate.prototype.onDrawTitleBox =
@@ -55,7 +55,7 @@ AndGate.prototype.onDrawTitleBox =
 
 // OrGate
 
-const OrGate = () => {
+function OrGate() {
   this.classType = "native";
   this.iconName = "dungeon";
 
@@ -65,16 +65,16 @@ const OrGate = () => {
 
   this.addOutput("EXEC", "@EXEC", shapeAndColorsForSlotType("@EXEC"));
   this.addOutput("OUT", "boolean", shapeAndColorsForSlotType("boolean"));
-};
+}
 
 OrGate.title = "OrGate";
-OrGate.prototype.getFields = (output) => {
+OrGate.prototype.getFields = function (output) {
   return ["boolean " + output[1]];
 };
-OrGate.prototype.getMethodBody = (input, output) => {
+OrGate.prototype.getMethodBody = function (input, output) {
   return output[1] + " = " + input[1] + " || " + input[2] + ";\n";
 };
-OrGate.prototype.getExecAfter = (exec) => {
+OrGate.prototype.getExecAfter = function (exec) {
   return exec[0].join("\n");
 };
 OrGate.prototype.onDrawTitleBox =

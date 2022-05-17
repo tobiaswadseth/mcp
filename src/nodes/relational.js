@@ -4,12 +4,12 @@ const {
   handleDescDrawBackground,
 } = require("../util");
 
-const RelationalOperator = () => {
+function RelationalOperator() {
   this.classType = "native";
   this.operation = "?";
-};
+}
 
-RelationalOperator.prototype.init = (booleanInputs) => {
+RelationalOperator.prototype.init = function (booleanInputs) {
   this.desc = "Compare two numbers";
   this.addInput("EXEC", "@EXEC", shapeAndColorsForSlotType("@EXEC"));
   this.addOutput("EXEC", "@EXEC", shapeAndColorsForSlotType("@EXEC"));
@@ -40,7 +40,7 @@ RelationalOperator.prototype.init = (booleanInputs) => {
   );
 };
 
-RelationalOperator.prototype.onDrawBackground = (ctx) => {
+RelationalOperator.prototype.onDrawBackground = function (ctx) {
   this.inputs[1].type = this.properties.type;
   this.inputs[2].type = this.properties.type;
 
@@ -59,63 +59,63 @@ RelationalOperator.prototype.onDrawBackground = (ctx) => {
   handleDescDrawBackground.call(this, ctx);
 };
 
-RelationalOperator.prototype.getFields = (output) => {
+RelationalOperator.prototype.getFields = function (output) {
   return ["boolean " + output[1]];
 };
-RelationalOperator.prototype.getMethodBody = (input, output) => {
+RelationalOperator.prototype.getMethodBody = function (input, output) {
   return output[1] + " = " + input[1] + this.operation + input[2] + ";";
 };
-RelationalOperator.prototype.getExecAfter = (exec) => {
+RelationalOperator.prototype.getExecAfter = function (exec) {
   return exec[0].join("\n");
 };
 
-const extend = (ChildClass, ParentClass) => {
+function extend(ChildClass, ParentClass) {
   ChildClass.prototype = new ParentClass();
   ChildClass.prototype.constructor = ChildClass;
   return ChildClass;
-};
+}
 
 /// Equal
 
-const Equal = () => {
+function Equal() {
   this.operation = "==";
   this.init(true);
-};
+}
 
 /// NotEqual
 
-const NotEqual = () => {
+function NotEqual() {
   this.operation = "!=";
   this.init(true);
-};
+}
 
 /// GreaterThan
 
-const GreaterThan = () => {
+function GreaterThan() {
   this.operation = ">";
   this.init();
-};
+}
 
 /// GreaterEqualThan
 
-const GreaterEqualTo = () => {
+function GreaterEqualTo() {
   this.operation = ">=";
   this.init();
-};
+}
 
 /// LessThan
 
-const LessThan = () => {
+function LessThan() {
   this.operation = "<";
   this.init();
-};
+}
 
 /// LessEqualTo
 
-const LessEqualTo = () => {
+function LessEqualTo() {
   this.operation = "<=";
   this.init();
-};
+}
 
 module.exports = [
   extend(Equal, RelationalOperator),

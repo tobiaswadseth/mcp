@@ -3,7 +3,7 @@ const { shapeAndColorsForSlotType, getNumberSuffix } = require("../util");
 
 // String Constant
 
-const StringConstant = () => {
+function StringConstant() {
   this.classType = "native";
   this.desc = "A constant String";
   this.iconName = "align-left";
@@ -13,15 +13,15 @@ const StringConstant = () => {
     shapeAndColorsForSlotType("java.lang.String")
   );
   this.addProperty("string", "", "string");
-};
+}
 
 StringConstant.prototype.color = Colors.STRING_OFF;
-StringConstant.prototype.getFields = (output) => {
+StringConstant.prototype.getFields = function (output) {
   return [
     "java.lang.String " + output[0] + ' = "' + this.properties.string + '"',
   ];
 };
-StringConstant.prototype.onPropertyChanged = (k, p) => {
+StringConstant.prototype.onPropertyChanged = function (k, p) {
   this.outputs[0].label = this.properties.string;
   this.size = this.computeSize();
 };
@@ -30,7 +30,7 @@ StringConstant.prototype.onDrawTitleBox =
 
 // Number Constant
 
-const NumberConstant = () => {
+function NumberConstant() {
   this.classType = "native";
   this.desc = "A constant Number";
   this.iconName = "sort-numeric-down";
@@ -42,10 +42,10 @@ const NumberConstant = () => {
     values: ["byte", "char", "short", "int", "long", "float", "double"],
   });
   this.addProperty("number", 0, "number");
-};
+}
 
 NumberConstant.prototype.color = Colors.NUMBER_OFF;
-NumberConstant.prototype.getFields = (output) => {
+NumberConstant.prototype.getFields = function (output) {
   return [
     this.properties.type +
       " " +
@@ -55,7 +55,7 @@ NumberConstant.prototype.getFields = (output) => {
       getNumberSuffix(this.properties.type),
   ];
 };
-NumberConstant.prototype.onPropertyChanged = (k, p) => {
+NumberConstant.prototype.onPropertyChanged = function (k, p) {
   this.outputs[0].label = this.properties.type + " " + this.properties.number;
   this.outputs[0].type = this.properties.type;
   this.size = this.computeSize();
@@ -65,19 +65,19 @@ NumberConstant.prototype.onDrawTitleBox =
 
 // Boolean Constant
 
-const BooleanConstant = () => {
+function BooleanConstant() {
   this.classType = "native";
   this.desc = "A constant boolean";
   this.iconName = "toggle-on";
   this.addOutput("", "boolean", shapeAndColorsForSlotType("boolean"));
   this.addProperty("value", false, "boolean");
-};
+}
 
 BooleanConstant.prototype.color = Colors.BOOLEAN_OFF;
-BooleanConstant.prototype.getFields = (output) => {
+BooleanConstant.prototype.getFields = function (output) {
   return ["boolean " + output[0] + " = " + this.properties.value];
 };
-BooleanConstant.prototype.onPropertyChanged = (k, p) => {
+BooleanConstant.prototype.onPropertyChanged = function (k, p) {
   this.outputs[0].label = "" + this.properties.value;
   this.size = this.computeSize();
 };
@@ -86,14 +86,14 @@ BooleanConstant.prototype.onDrawTitleBox =
 
 // Null Constant
 
-const Null = () => {
+function Null() {
   this.classType = "native";
   this.desc = "Null constant";
   this.addOutput("null", null, shapeAndColorsForSlotType("object"));
-};
+}
 
 Null.prototype.color = Colors.OBJECT_OFF;
-Null.prototype.getFields = (output) => {
+Null.prototype.getFields = function (output) {
   return ["java.lang.Object " + output[0] + " = null"];
 };
 

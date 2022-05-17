@@ -204,7 +204,7 @@
         }
       ],
       "pos": [577.324104309082, 304.30323791503906],
-      "properties": { "string": "Enabed %s version %s!" },
+      "properties": { "string": "Enabled %s version %s!" },
       "size": { "0": 203.1999969482422, "1": 19 },
       "type": "constants/StringConstant"
     },
