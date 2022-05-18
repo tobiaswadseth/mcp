@@ -27,12 +27,13 @@
     <strong>Looks like there is an error in your plugin!</strong>
     <div id="message"></div>
     <div id="content"></div>
+    <button id="close" class="btn">Close</button>
     <script>
       const { ipcRenderer, shell } = require("electron");
       const { getCurrentWindow, Menu } = require("electron").remote;
       const $ = require("jquery");
 
-      String.prototype.replaceAll = (search, replacement) => {
+      String.prototype.replaceAll = function(search, replacement) {
         var target = this;
         return target.replace(new RegExp(search, "g"), replacement);
       };
@@ -57,11 +58,15 @@
 
       $("#content").append(message);
 
-      $(".node-ref").on("click", (e) => {
+      $(".node-ref").on("click", function(e) {
         e.preventDefault();
         ipcRenderer.send("highlightNode", {
           node: $(this).data("node"),
         });
+      });
+
+      $("#close").on("click", () => {
+        getCurrentWindow().close();
       });
     </script>
   </body>

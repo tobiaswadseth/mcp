@@ -89,10 +89,8 @@
     <script src="../node_modules/materialize-css/dist/js/materialize.min.js"></script>
     <script>
       const { ipcRenderer } = require("electron");
-      const { Menu, getCurrentWindow, getGlobal } = require("electron").remote;
+      const { getCurrentWindow, getGlobal } = require("electron").remote;
       const $ = require("jquery");
-
-      Menu.setApplicationMenu(null);
 
       let custom = getCurrentWindow().custom;
       let commandInfo = custom.command;

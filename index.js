@@ -755,9 +755,6 @@ const makePluginYml = () => {
     ".GeneratedPlugin" +
     "\nauthor: " +
     currentProject.author +
-    "\nsoftdepend: [" +
-    (currentProject.softdepend || []).join(",") +
-    "]" +
     "\ngenerator: MCP " +
     app.getVersion() +
     "\napi-version: 1.15\n";

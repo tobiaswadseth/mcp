@@ -90,7 +90,7 @@
         }
         if (arg.hasNode) {
           entry.addClass("has-node");
-          entry.find(".node-ref").on("click", (e) => {
+          entry.find(".node-ref").on("click", function(e) {
             e.preventDefault();
             ipcRenderer.send("highlightNode", {
               node: $(this).data("node"),

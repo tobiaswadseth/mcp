@@ -81,12 +81,6 @@
               <label for="package">Package</label>
             </div>
           </div>
-          <div class="row">
-            <div class="input-field col s12">
-              <input value="" id="softdepend" type="text" />
-              <label for="softdepend">Soft-Depend (command-separated)</label>
-            </div>
-          </div>
 
           <div class="row">
             <h6>
@@ -136,13 +130,6 @@
         projectInfo.author = $("#author").val();
         projectInfo.package = $("#package").val();
 
-        let softdepend = [];
-        let softdependSplit = $("#softdepend").val().split(",");
-        for (let i = 0; i < softdependSplit.length; i++) {
-          softdepend.push(softdependSplit[i].trim());
-        }
-        projectInfo.softdepend = softdepend || [];
-
         projectInfo.commands = commands || [];
 
         ipcRenderer.send("updateProjectInfo", projectInfo);
@@ -158,7 +145,6 @@
         if (arg.version) $("#version").val(arg.version);
         if (arg.author) $("#author").val(arg.author);
         if (arg.package) $("#package").val(arg.package);
-        if (arg.softdepend) $("#softdepend").val(arg.softdepend.join(","));
         if (arg.commands) {
           commands = arg.commands;
           updateCommandList();
