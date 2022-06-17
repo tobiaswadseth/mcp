@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/tobiaswadseth/mcp#readme",
   "devDependencies": {
-    "electron": "^3.0.13",
+    "electron": "^15.5.5",
     "electron-builder": "^22.0.0",
     "electron-installer-windows": "^1.1.0",
     "electron-packager": "^12.2.0",
